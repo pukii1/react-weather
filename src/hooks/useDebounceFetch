@@ -1,0 +1,34 @@
+import { useState } from 'react';
+import useFetch from './useFetch';
+import { debounce } from 'lodash';
+
+const useDebounceFetch = (value, delay)=>{
+    const [data, setData] = useState(null);
+    const [error,setError] = useState(null);
+    const [loading, setLoading] = useState(false);
+
+
+        const debouncedFetch = debounce(() => {    
+            setLoading(false);
+            useFetch(value)
+                .then(({data, error, loading})=>{
+                    setData(data);
+                    setError(error);
+                    setLoading(loading);
+                })
+                .catch( (err) =>{
+                    setError(err.message);
+                })
+                .finally(()=>{
+                    setLoading(false);
+                })
+            }, delay)
+
+    
+        debouncedFetch();
+
+        return {data, error, loading};
+    }
+
+
+export default useDebounceFetch;
