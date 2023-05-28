@@ -1,8 +1,6 @@
 import './App.css';
 import Dropdown from './components/Dropdown';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMapMarkerAlt } from '@fortawesome/free-solid-svg-icons';
-
+import CurrentWeather from './components/CurrentWeather';
 import { useState, useEffect } from 'react';
 import { debounce } from 'lodash';
 
@@ -18,6 +16,10 @@ function App() {
   const autoAPIKey = "85d1e69a6f9b4e08b4226c0465384f18";
   //weather API key
   const weatherAPIKey = "020fdb36b8b179cde66157d24221cac6";
+  const defaultLat = "53.550341";
+  const defaultLon = "10.000654";
+  //default weather fetch url
+  const defaultWeatherUrl = `https://api.openweathermap.org/data/2.5/forecast?lat=${defaultLat}&lon=${defaultLon}&appid=${weatherAPIKey}`
   //weather url
   const [weatherUrl, setWeatherUrl] = useState("");
   //search value
@@ -26,7 +28,7 @@ function App() {
   const [loading, setLoading] = useState(false);
   //weather data + weather fetch error
   const [weatherError, setWeatherError] = useState(null);
-  const [weatherData, setWeatherData] = useState([]);
+  const [weatherData, setWeatherData] = useState(null);
   //autocomplete suggestions
   const [suggestions, setSuggestions] = useState([]);
   
@@ -47,7 +49,7 @@ function App() {
    * @param {*} error potential error
    * @param {*} loading loading state
    */
-  const fetchCallback = (data, error, loading)=> {
+  const weatherFetchCallback = (data, error, loading)=> {
     setSuggestions(data);
     setError(error);
     setLoading(loading);
@@ -58,23 +60,7 @@ function App() {
    */
   useEffect(()=>{
     console.log(`fetching ${weatherUrl}`)
-    fetch(weatherUrl)
-    .then(res => {
-      // If data fetching failed, throw an error with an error message
-      if (!res.ok) {
-        throw new Error("Error occurred while trying to fetch the weather data");
-      }
-      // If fetching succeeded, return the JSON of the response
-      return res.json();
-    })
-    .then(data => {
-      console.log("fetching weather data")
-      console.log(data)
-      fetchWeatherCallback(data.list[0].main, null);
-    })
-    .catch(err => {
-      fetchWeatherCallback( null, err.message);
-    });
+    fetchWeather(weatherUrl);
   }, [weatherUrl])
 
 
@@ -99,11 +85,19 @@ function App() {
     }
   }, [location]);
 
+
+  /**
+   * Debug set fetch to default city
+   */
+  useEffect(()=>{
+    console.log("default fetching weather")
+    fetchWeather(defaultWeatherUrl, weatherFetchCallback)
+  }, [])
   /**
    * Fetches locations when location is updated
    */
   useEffect(()=>{
-      fetchLocations(autoUrl, fetchCallback);
+      fetchLocations(autoUrl, weatherFetchCallback);
   }, [autoUrl])
 
   /**
@@ -125,7 +119,26 @@ function App() {
     console.log(`setting coords lat:${lat}, lon:${lon}`)
   }
 
+  const fetchWeather = (weatherUrl)=>{
+    fetch(weatherUrl)
+    .then(res => {
+      // If data fetching failed, throw an error with an error message
+      if (!res.ok) {
+        throw new Error("Error occurred while trying to fetch the weather data");
+      }
+      // If fetching succeeded, return the JSON of the response
+      return res.json();
+    })
+    .then(data => {
+      console.log("fetching weather data")
+      console.log(data)
+      fetchWeatherCallback(data.list[0], null);
+    })
+    .catch(err => {
+      fetchWeatherCallback( null, err.message);
+    });
   
+  }
   
   /**
    * Fetch function to fetch autocomplete suggestions
@@ -171,21 +184,11 @@ function App() {
   };
 
  
-/**
- * Helper function to convert kelvin to celsius
- * @param {} k temp in kelvin
- * @returns temp in celsius
- */
-  //converts kelvin to celsius
-  const toCelsius = (k)=>{
-    return Math.floor(k-273.15)
-  }
 
 
 
   return (
     <div className="App">
-      {/*<FontAwesomeIcon className="icon" icon={faMapMarkerAlt} />*/}
       <input 
       className="locationInput"
         type="text"
@@ -200,7 +203,8 @@ function App() {
         <div>
           {suggestions && !selectedLocation && <Dropdown setCoords={setCoords} suggestions={suggestions}/>}  
         </div>}
-        {weatherData && <p>temp max: {toCelsius(weatherData.temp)}°</p>}
+        <p className="debug">Hamburg</p>
+        {weatherData && <CurrentWeather weatherData={weatherData}/>}
     </div>
   );
 }
