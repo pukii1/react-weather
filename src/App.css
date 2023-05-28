@@ -1,6 +1,25 @@
 .App {
+  margin-top: 40px;
   text-align: center;
 }
-
-
-
+.App .icon {
+  font-size: 1.5em;
+  margin-right: 10px;
+}
+.App .locationInput {
+  background-color: transparent;
+  border: none;
+  text-align: center;
+  color: white;
+  font-size: 2em;
+}
+.App .locationInput::-moz-placeholder {
+  color: white;
+}
+.App .locationInput::placeholder {
+  color: white;
+}
+.App .locationInput:focus {
+  border: none;
+  outline: none;
+}/*# sourceMappingURL=App.css.map */

@@ -8,7 +8,7 @@ export default function Dropdown({suggestions, setCoords}) {
         <div className="dropdown-content">
 
             {suggestions.map((suggestion, i)=>{
-                return (<a href="#" onClick={()=>{setCoords(suggestion.lat, suggestion.lon)}} key={i}>
+                return (<a href="#" onClick={()=>{setCoords(suggestion.city, suggestion.country_code, suggestion.lat, suggestion.lon)}} key={i}>
                     {suggestion.city},
                     {suggestion.country},
                     {suggestion.country_code}
