@@ -1,0 +1,39 @@
+.currentWeather {
+  width: 50%;
+  margin: 0 auto;
+}
+.currentWeather .mainWeather .temp {
+  font-size: 5em;
+  font-weight: bolder;
+  margin: 0;
+}
+.currentWeather .mainWeather .weatherDescr {
+  margin: 0;
+  font-size: 2em;
+}
+.currentWeather .mainWeather .date {
+  font-size: 0.7em;
+  color: #eee;
+  opacity: 80%;
+}
+.currentWeather .mainWeather .date p {
+  margin: 0;
+}
+.currentWeather .weatherIcon {
+  height: 200px;
+}
+.currentWeather .detailedWeather {
+  margin: 0 auto;
+  width: 80%;
+  margin-top: 30px;
+  padding-top: 30px;
+  border-top: 2px solid rgba(238, 238, 238, 0.5764705882);
+  display: flex;
+  justify-content: space-around;
+}
+.currentWeather .detailedWeather p {
+  margin: 0;
+}
+.currentWeather .detailedWeather .detailedDescr {
+  opacity: 60%;
+}/*# sourceMappingURL=CurrentWeather.css.map */
