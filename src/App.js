@@ -13,9 +13,11 @@ function App() {
   //Autocomplete fetch URL
   const [autoUrl, setAutoUrl] = useState("");
   //Autocomplete API Key
-  const autoAPIKey = "85d1e69a6f9b4e08b4226c0465384f18";
+  const autoAPIKey = process.env.REACT_APP_AUTOCOMPLETE_TOKEN;
+  //const autoAPIKey = "85d1e69a6f9b4e08b4226c0465384f18";
   //weather API key
-  const weatherAPIKey = "020fdb36b8b179cde66157d24221cac6";
+  const weatherAPIKey = process.env.REACT_APP_WEATHER_TOKEN;//"020fdb36b8b179cde66157d24221cac6";
+  
   const defaultLat = "53.550341";
   const defaultLon = "10.000654";
   //default weather fetch url
