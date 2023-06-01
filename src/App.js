@@ -3,7 +3,9 @@ import Dropdown from './components/Dropdown';
 import CurrentWeather from './components/CurrentWeather';
 import { useState, useEffect } from 'react';
 import { debounce } from 'lodash';
-
+import HourlyWeather from './components/HourlyWeather';
+import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 function App() {
   //lodash delay time in ms
@@ -31,6 +33,7 @@ function App() {
   //weather data + weather fetch error
   const [weatherError, setWeatherError] = useState(null);
   const [weatherData, setWeatherData] = useState(null);
+  const [hourlyWeatherData, setHourlyWeatherData] = useState(null)
   //autocomplete suggestions
   const [suggestions, setSuggestions] = useState([]);
   
@@ -42,6 +45,13 @@ function App() {
    */
   const fetchWeatherCallback = (data, error)=>{
     setWeatherData(data);
+    //get hourly weather forecast data (4x 3h forecasts)
+    console.log(data)
+    if(data){
+      let hourlyWeatherData = data.slice(0,4);
+      setHourlyWeatherData(hourlyWeatherData)
+    }
+    
     setWeatherError(error)
   }
   /**
@@ -134,7 +144,7 @@ function App() {
     .then(data => {
       console.log("fetching weather data")
       console.log(data)
-      fetchWeatherCallback(data.list[0], null);
+      fetchWeatherCallback(data.list, null);
     })
     .catch(err => {
       fetchWeatherCallback( null, err.message);
@@ -177,12 +187,16 @@ function App() {
     setLocation(e.target.value);
   };
   
+  const handleInputBlur = (e)=>{
+    setSelectedLocation(true)
+  }
   /**
    * Click handler for location input
    * clears location input field when clicked
    */
   const handleInputClick = () => {
-    setLocation('');
+    //setLocation('');
+    setSelectedLocation(false);
   };
 
  
@@ -191,22 +205,33 @@ function App() {
 
   return (
     <div className="App">
-      <input 
-      className="locationInput"
-        type="text"
-        value={location}
-        onChange={handleInputChange}
-        onClick={handleInputClick}
-        placeholder="Where u @ ?"
-       />
-       {error && <p>{error.message}</p>}
-       {loading ? 
-        <p>Loading...</p> : 
-        <div>
-          {suggestions && !selectedLocation && <Dropdown setCoords={setCoords} suggestions={suggestions}/>}  
-        </div>}
-        <p className="debug">Hamburg</p>
-        {weatherData && <CurrentWeather weatherData={weatherData}/>}
+      <div className="weather">
+        <input 
+        className="locationInput"
+          type="text"
+          value={location}
+          onChange={handleInputChange}
+          onClick={handleInputClick}
+          onBlur={handleInputBlur}
+          placeholder="Where u @ ?"
+        />
+        {error && <p>{error.message}</p>}
+        {loading ? 
+          <p>Loading...</p> : 
+          <div>
+            {suggestions && !selectedLocation && <Dropdown setCoords={setCoords} suggestions={suggestions}/>}  
+          </div>}
+          <p className="debug">Hamburg</p>
+          {weatherData && <CurrentWeather weatherData={weatherData[0]}/>}
+      </div>
+      <div className="navigation">
+            <span className="today">Today</span>
+            <button className="fiveDays">
+                5 days  
+                <FontAwesomeIcon className="navIcon" icon={faChevronRight}/>
+            </button>
+        </div>
+          {weatherData && <HourlyWeather hourlyWeatherData={hourlyWeatherData}/>}
     </div>
   );
 }

@@ -2,34 +2,8 @@
     width: 30%;
     margin: 15px auto 40px auto;
 
-    .navigation{
-        display: flex;
-        justify-content: space-between;
-        align-items: end;
-        margin-bottom:20px;
-
-        .today{
-            font-weight:bolder;
-        }
-
-        .fiveDays{
-            opacity: 60%;
-            font-size:.75em;
-            background-color: transparent;
-            border:none;
-            color:white;
-            .navIcon{
-                margin-left:5px;
-            }
-
-            &:hover{
-                cursor: pointer;
-                opacity:100%;
-            }
-        }
-
-    }
-
+    
+        
 
     .hourlyForecasts{
         display:flex;   
