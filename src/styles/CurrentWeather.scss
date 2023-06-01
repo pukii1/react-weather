@@ -1,3 +1,45 @@
-.weatherIcon{
-    height: 50px;
+.currentWeather{
+    width:50%;
+    margin:0 auto;
+
+    .mainWeather{
+        .temp{
+            font-size:5em;
+            font-weight:bolder;
+            margin:0;
+        }
+
+        .weatherDescr{
+            margin:0;
+            font-size:2em;
+        }
+        .date{
+            font-size:.7em;
+            color:#eee;
+            opacity: 80%;
+            p{
+                margin:0;
+            }
+        }
+    }
+    .weatherIcon{
+        height: 200px;
+    }
+    .detailedWeather{
+        margin:0 auto;
+        width:80%;
+        margin-top:30px;
+        padding-top:30px;
+        border-top: 2px solid #eeeeee93;
+        display: flex;
+        justify-content: space-around;
+
+        p{
+            margin:0;
+        }
+
+        .detailedDescr{
+            opacity:60%;
+        }
+    }
 }

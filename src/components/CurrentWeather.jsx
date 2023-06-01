@@ -137,6 +137,7 @@ export default function CurrentWeather({weatherData}) {
 
 
         </div>
+        
     </div>
   )
 }

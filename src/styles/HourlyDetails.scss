@@ -1,0 +1,24 @@
+.hourlyDetails{
+    border-radius:15px;
+    padding:5px;
+    width: 8%;
+    .hourlyIcon{
+        width:20px;
+    }
+    .hourlyTemp{
+        margin:2px;
+        font-size:.8em;
+        font-weight: bolder;
+    }
+    .hourlyTime{
+        font-size:.6em;
+        opacity:70%;
+        margin:2px;
+    }
+
+
+    &:hover{
+      background: linear-gradient(to bottom, #15c2f6, #1591f6);
+      box-shadow: 0 0 10px 5px rgba(0, 123, 255, 0.5);
+    }
+}
