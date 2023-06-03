@@ -1,11 +1,14 @@
-import './App.css';
+import './App.scss';
 import Dropdown from './components/Dropdown';
 import CurrentWeather from './components/CurrentWeather';
+import WeatherForecast from './components/WeatherForecast';
 import { useState, useEffect } from 'react';
 import { debounce } from 'lodash';
 import HourlyWeather from './components/HourlyWeather';
 import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import React from 'react'
+
 
 function App() {
   //lodash delay time in ms
@@ -16,14 +19,18 @@ function App() {
   const [autoUrl, setAutoUrl] = useState("");
   //Autocomplete API Key
   const autoAPIKey = process.env.REACT_APP_AUTOCOMPLETE_TOKEN;
-  //const autoAPIKey = "85d1e69a6f9b4e08b4226c0465384f18";
   //weather API key
   const weatherAPIKey = process.env.REACT_APP_WEATHER_TOKEN;//"020fdb36b8b179cde66157d24221cac6";
-  
-  const defaultLat = "53.550341";
-  const defaultLon = "10.000654";
+  //reverse geocoding key to convert coords to location
+  const reverseGeoKey = "85d1e69a6f9b4e08b4226c0465384f18"
+
+  const [defaultCity, setDefaultCity] = useState("");
+  const [defaultCountryCode, setDefaultCountryCode] = useState("");
+  const [defaultLat, setDefaultLat] = useState("");
+  const [defaultLon, setDefaultLon] = useState("");
   //default weather fetch url
   const defaultWeatherUrl = `https://api.openweathermap.org/data/2.5/forecast?lat=${defaultLat}&lon=${defaultLon}&appid=${weatherAPIKey}`
+  const [reverseGeocodeUrl, setReverseGeocodeUrl] = useState("");
   //weather url
   const [weatherUrl, setWeatherUrl] = useState("");
   //search value
@@ -36,7 +43,7 @@ function App() {
   const [hourlyWeatherData, setHourlyWeatherData] = useState(null)
   //autocomplete suggestions
   const [suggestions, setSuggestions] = useState([]);
-  
+  const [showForecast, setShowForecast] = useState(false);
 
   /**
    * callback to poplate weather data + weather error consts
@@ -81,6 +88,7 @@ function App() {
    *  after @delayTime ms once @location changes via debounce
    */
    useEffect(() => {
+    console.log("location changed....")
     if(location.length > 0){
       const debouncedFetch = debounce(() => {
         setLoading(true);
@@ -102,8 +110,7 @@ function App() {
    * Debug set fetch to default city
    */
   useEffect(()=>{
-    console.log("default fetching weather")
-    fetchWeather(defaultWeatherUrl, weatherFetchCallback)
+    getDefaultLocation();
   }, [])
   /**
    * Fetches locations when location is updated
@@ -128,9 +135,10 @@ function App() {
     setSelectedLocation(true);
     //put locations coords into weather fetch url
     setWeatherUrl(`https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${weatherAPIKey}`);
-    console.log(`setting coords lat:${lat}, lon:${lon}`)
+    //console.log(`setting coords lat:${lat}, lon:${lon}`)
   }
 
+  //TODO fix location useEffect call + loading state on default location fetch
   const fetchWeather = (weatherUrl)=>{
     fetch(weatherUrl)
     .then(res => {
@@ -142,8 +150,8 @@ function App() {
       return res.json();
     })
     .then(data => {
-      console.log("fetching weather data")
-      console.log(data)
+      //console.log("fetching weather data")
+      //console.log(data)
       fetchWeatherCallback(data.list, null);
     })
     .catch(err => {
@@ -152,6 +160,50 @@ function App() {
   
   }
   
+  const getDefaultLocation = ()=>{
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(
+            (position) => {
+              let lat = position.coords.latitude;
+              let lon = position.coords.longitude;
+              setDefaultLat(lat)
+              setDefaultLon(lon)
+              setReverseGeocodeUrl(`https://api.geoapify.com/v1/geocode/reverse?lat=${lat}&lon=${lon}&format=json&apiKey=${reverseGeoKey}`)
+            },
+            (error) => {
+              //TODO display default location msg
+            }
+          );
+        } else {
+          setCoords("Hamburg", "de", defaultLat, defaultLon)
+        }
+    };
+  
+    useEffect(()=>{
+      fetch(reverseGeocodeUrl)
+      .then((res)=>{
+        // If data fetching failed, throw an error with an error message
+        if (!res.ok) {
+          throw new Error("Error occurred while trying to fetch the data");
+        }
+        // If fetching succeeded, return the JSON of the response
+        return res.json();
+      })
+      .then((data)=>{
+        console.log("reverse geocoding fetch")
+        console.log(data)
+        setDefaultCity(data.results[0].city);
+        setDefaultCountryCode(data.results[0].country_code)
+      })
+
+    }, [reverseGeocodeUrl])
+
+    //set coords if default city and country code change
+    useEffect(()=>{
+      console.log(`city: ${defaultCity}, country_code: ${defaultCountryCode}`)
+      setCoords(defaultCity, defaultCountryCode, defaultLat, defaultLon);
+
+    }, [defaultCity, defaultCountryCode])
   /**
    * Fetch function to fetch autocomplete suggestions
    * @param {} url autocomplete fetch url
@@ -168,7 +220,8 @@ function App() {
         return res.json();
       })
       .then(data => {
-        console.log(data.results)
+        //console.log("location fetch results: ")
+        //console.log(data.results)
         callback(data.results, null, false);
       })
       .catch(err => {
@@ -199,13 +252,18 @@ function App() {
     setSelectedLocation(false);
   };
 
- 
+ const rtCurrentWeather = ()=>{
+  setShowForecast(false);
+ }
 
 
 
   return (
     <div className="App">
-      <div className="weather">
+      
+      {!showForecast &&
+        <>
+        <div className="weather">
         <input 
         className="locationInput"
           type="text"
@@ -221,17 +279,22 @@ function App() {
           <div>
             {suggestions && !selectedLocation && <Dropdown setCoords={setCoords} suggestions={suggestions}/>}  
           </div>}
-          <p className="debug">Hamburg</p>
+
+          {defaultCity.length > 0 &&  <p className="debug">{defaultCity}</p>}
           {weatherData && <CurrentWeather weatherData={weatherData[0]}/>}
       </div>
+      
       <div className="navigation">
             <span className="today">Today</span>
-            <button className="fiveDays">
+            <button className="fiveDays" onClick={()=>{setShowForecast(true)}}>
                 5 days  
                 <FontAwesomeIcon className="navIcon" icon={faChevronRight}/>
             </button>
         </div>
           {weatherData && <HourlyWeather hourlyWeatherData={hourlyWeatherData}/>}
+        </>
+        }
+          {weatherData && showForecast && <WeatherForecast returnToCurrentWeather={rtCurrentWeather}/>}
     </div>
   );
 }
