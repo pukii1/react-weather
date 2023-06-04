@@ -39,6 +39,19 @@ export function minTemp(weatherData){
 
     return minT;
 }
+
+/**
+ * Helper to get the max temp of a forecast weather obj
+ * @param {} fc forecast obj
+ * @returns max temperature
+ */
+export function maxTemp(weatherData){
+  let maxT = weatherData.reduce((max, obj)=>{
+      return obj.main.temp_max > max ? obj.main.temp_max : max;
+  }, -Infinity)
+
+  return maxT;
+}
 /**
  * Helper function to convert kelvin to celsius
  * @param {} k temp in kelvin
@@ -56,7 +69,26 @@ export function minTemp(weatherData){
     return Math.floor(speed * 2.237)
   }
 
+  const weekdays = {
+    1: ["Monday", "Mon"],
+    2: ["Tuesday", "Tue"],
+    3: ["Wednesday", "Wed"],
+    4: ["Thursday", "Thur"],
+    5: ["Friday", "Fri"],
+    6: ["Saturday", "Sat"],
+    7: ["Sunday", "Sun"]
+  }
 
+  /**
+   * Helper function to get weekday from epoch timestamp
+   * @param {*} timestamp epoch timestamp
+   * @returns weekday
+   */
+  export function getDayFromEpoch(timestamp){
+    let date = new Date(timestamp * 1000);
+    let day = date.getDay();
+    return weekdays[day][1];
+  }
   /**
    * Helper to get weather icon corresponding to @weatherConidition
    * @param {*} weatherCondition the weather condition i.e. rainy

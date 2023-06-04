@@ -1,0 +1,31 @@
+.forecastPreview{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    *{
+        opacity: 70%;
+        display: inline-block;
+        flex-basis: 10%;
+        text-align: center;
+    }
+
+    
+    .forecastDescr{
+        flex-basis: 70%;
+        display:flex;
+        align-items: center;
+        justify-content: center;
+        .forecastPreviewWeatherIcon{
+            width: 20px;
+            height: 20px;
+            flex-basis: 10%;
+            opacity: 100%;
+        }
+        p{
+            flex-basis: 30%;
+        }
+    }
+    .forecastMaxTemp{
+        opacity: 100%;
+    }
+}

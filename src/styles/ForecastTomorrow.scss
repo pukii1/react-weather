@@ -1,9 +1,42 @@
-.mainWeather{
-    display:flex;
+.forecastTomorrow{
+    width: 60%;
+    margin: 0 auto;
 
+    .mainWeatherTomorrow{
+        display:flex;
+        margin: 30px auto;
+        justify-content: space-around;
 
-    .weatherIcon{
-        width: 150px;
-        height: 150px;
+        .weatherIconContainer{
+            display:flex;
+
+            .weatherIconTomorrow{
+                width: 150px;
+                height: 150px;
+            }
+        }
+        
+        .mainInfo{
+            .mainTomorrowTitle{
+                font-size: 1.3em;
+                margin:0;
+            }
+            .temp{
+                font-weight: bolder;
+                .minTemp{
+                    opacity: 70%;
+                    font-size: 2em;
+                }
+                .maxTemp{
+                    font-size: 5em;
+                }
+            }
+            .weatherDescription{
+                opacity: 70%;
+            }
+
+        }
+        
+
     }
 }

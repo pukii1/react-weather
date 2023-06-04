@@ -1,24 +1,49 @@
 .weatherForecast{
     width: 60%;
-    margin: 30px auto;
+    margin: 0px auto 30px auto;
     padding: 50px;
     border-radius: 0 0 35px 35px;
     box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
     background: linear-gradient(to bottom, #15c2f6, #1591f6);
     box-shadow: 0 0 10px 5px rgba(0, 123, 255, 0.5);
 
-    button{
-        background-color: transparent;
-        color: white;
-        width:30px;
-        height:30px;
-        padding:5px 10px;
-        border: 1px solid white;
-        border-radius: 50%;
-        opacity: 60%;
+    .forecastNavigation{
+        width: 40%;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        button{
+            background-color: transparent;
+            color: white;
+            width:30px;
+            height:30px;
+            padding:5px 10px;
+            border: 1px solid white;
+            border-radius: 50%;
+            opacity: 60%;
+        }
+        &:hover{
+            cursor: pointer;
+            opacity: 100%;
+        }
+        .forecastTomorrowTitle {
+            
+            .forecastCalendarIcon{
+                margin-right: 10px;
+                font-size:.7em;
+            }
+            font-size: 1.5em;
+            width: 70%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bolder;
+        }
     }
-    &:hover{
-        cursor: pointer;
-        opacity: 100%;
-    }
+    
+}
+
+.forecastPreviewContainer{
+    width: 40%;
+    margin: 30px auto;
 }
