@@ -43,7 +43,7 @@ function App() {
   const [hourlyWeatherData, setHourlyWeatherData] = useState(null)
   //autocomplete suggestions
   const [suggestions, setSuggestions] = useState([]);
-  const [showForecast, setShowForecast] = useState(false);
+  const [showForecast, setShowForecast] = useState(true);
 
   /**
    * callback to poplate weather data + weather error consts
@@ -202,7 +202,7 @@ function App() {
     useEffect(()=>{
       console.log(`city: ${defaultCity}, country_code: ${defaultCountryCode}`)
       setCoords(defaultCity, defaultCountryCode, defaultLat, defaultLon);
-
+      setLoading(false);
     }, [defaultCity, defaultCountryCode])
   /**
    * Fetch function to fetch autocomplete suggestions
@@ -294,7 +294,7 @@ function App() {
           {weatherData && <HourlyWeather hourlyWeatherData={hourlyWeatherData}/>}
         </>
         }
-          {weatherData && showForecast && <WeatherForecast returnToCurrentWeather={rtCurrentWeather}/>}
+          {weatherData && showForecast && <WeatherForecast weatherData={weatherData} returnToCurrentWeather={rtCurrentWeather}/>}
     </div>
   );
 }

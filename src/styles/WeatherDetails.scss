@@ -1,0 +1,17 @@
+.detailedWeather{
+    margin:0 auto;
+    width:80%;
+    margin-top:30px;
+    padding-top:30px;
+    border-top: 2px solid #eeeeee93;
+    display: flex;
+    justify-content: space-around;
+
+    p{
+        margin:0;
+    }
+
+    .detailedDescr{
+        opacity:60%;
+    }
+}
