@@ -87,7 +87,7 @@ export function maxTemp(weatherData){
   export function getDayFromEpoch(timestamp){
     let date = new Date(timestamp * 1000);
     let day = date.getDay();
-    return weekdays[day][1];
+    return weekdays[day+1][1];
   }
   /**
    * Helper to get weather icon corresponding to @weatherConidition

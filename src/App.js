@@ -2,7 +2,7 @@ import './App.scss';
 import Dropdown from './components/Dropdown';
 import CurrentWeather from './components/CurrentWeather';
 import WeatherForecast from './components/WeatherForecast';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { debounce } from 'lodash';
 import HourlyWeather from './components/HourlyWeather';
 import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
@@ -43,8 +43,8 @@ function App() {
   const [hourlyWeatherData, setHourlyWeatherData] = useState(null)
   //autocomplete suggestions
   const [suggestions, setSuggestions] = useState([]);
-  const [showForecast, setShowForecast] = useState(true);
-
+  const [showForecast, setShowForecast] = useState(false);
+  const [hideDropDown, setHideDropDown] = useState(true);
   /**
    * callback to poplate weather data + weather error consts
    * @param {*} data data received from the weather fetch 
@@ -70,6 +70,7 @@ function App() {
    */
   const weatherFetchCallback = (data, error, loading)=> {
     setSuggestions(data);
+    setHideDropDown(false)
     setError(error);
     setLoading(loading);
   }
@@ -129,14 +130,17 @@ function App() {
    * @param {*} lat latitude of the selected location
    * @param {*} lon longitude of the selected location
    */
-  const setCoords = (city, country_code,lat, lon)=>{
-    //update input value to display selected location
-    setLocation(`${city}, ${country_code}`)
+  const setCoords = useCallback((city, country_code, lat, lon) => {
+    // update input value to display selected location
+    setLocation(`${city}, ${country_code}`);
     setSelectedLocation(true);
-    //put locations coords into weather fetch url
+    setHideDropDown(true);
+
+    // put location's coords into weather fetch URL
     setWeatherUrl(`https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${weatherAPIKey}`);
-    //console.log(`setting coords lat:${lat}, lon:${lon}`)
-  }
+    console.log(`setting coords lat:${lat}, lon:${lon}`);
+  }, [setLocation, setSelectedLocation, setWeatherUrl, weatherAPIKey]);
+  
 
   //TODO fix location useEffect call + loading state on default location fetch
   const fetchWeather = (weatherUrl)=>{
@@ -198,6 +202,11 @@ function App() {
 
     }, [reverseGeocodeUrl])
 
+
+    useEffect(()=>{
+      console.log("set coords in App.js")
+      console.log(setCoords)
+    }, [])
     //set coords if default city and country code change
     useEffect(()=>{
       console.log(`city: ${defaultCity}, country_code: ${defaultCountryCode}`)
@@ -249,7 +258,6 @@ function App() {
    */
   const handleInputClick = () => {
     //setLocation('');
-    setSelectedLocation(false);
   };
 
  const rtCurrentWeather = ()=>{
@@ -277,11 +285,11 @@ function App() {
         {loading ? 
           <p>Loading...</p> : 
           <div>
-            {suggestions && !selectedLocation && <Dropdown setCoords={setCoords} suggestions={suggestions}/>}  
+            {suggestions  && !hideDropDown && <Dropdown setCoords={setCoords} suggestions={suggestions}/>}  
           </div>}
 
-          {defaultCity.length > 0 &&  <p className="debug">{defaultCity}</p>}
-          {weatherData && <CurrentWeather weatherData={weatherData[0]}/>}
+          {location > 0 &&  <p className="debug">{location}</p>}
+          {weatherData &&  <CurrentWeather weatherData={weatherData[0]}/>}
       </div>
       
       <div className="navigation">
