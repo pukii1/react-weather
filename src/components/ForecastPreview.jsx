@@ -18,7 +18,7 @@ export default function ForecastPreview({weatherData}) {
         <p>{weatherCondition}</p>
         </div>
       <div className="forecastTemp">
-        <p className="forecastMaxTemp">{toCelsius(minTemp(weatherData))}°</p>/
+        <p className="forecastMaxTemp">{toCelsius(maxTemp(weatherData))}°</p>/
         <p className="forecastMinTemp">{toCelsius(minTemp(weatherData))}°</p>
       </div>
     </div>
