@@ -1,0 +1,19 @@
+.weatherFooter{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    font-size: .7em;
+    opacity: 70%;
+
+    a{
+        cursor: pointer;
+        text-decoration: none;
+        color:white;
+        margin-left: 5px;
+        margin-right: 5px;
+    }
+    &:hover{
+        color: #bbb;
+    }
+
+}

@@ -1,5 +1,6 @@
 import './App.scss';
 import Dropdown from './components/Dropdown';
+import WeatherFooter from './components/WeatherFooter';
 import CurrentWeather from './components/CurrentWeather';
 import WeatherForecast from './components/WeatherForecast';
 import { useState, useEffect, useCallback } from 'react';
@@ -33,7 +34,7 @@ function App() {
   const [reverseGeocodeUrl, setReverseGeocodeUrl] = useState("");
   //weather url
   const [weatherUrl, setWeatherUrl] = useState("");
-  //search value
+  //search valueweather
   const [location, setLocation] = useState("");
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -303,6 +304,7 @@ function App() {
         </>
         }
           {weatherData && showForecast && <WeatherForecast weatherData={weatherData} returnToCurrentWeather={rtCurrentWeather}/>}
+          <WeatherFooter/>
     </div>
   );
 }

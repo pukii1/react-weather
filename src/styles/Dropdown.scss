@@ -14,16 +14,20 @@
     z-index: 1;
   
         /* Styling for the link inside the drop-down menu */
-        a {
+        .location-link {
             color: #333;
+            width: 100%;
             text-decoration: none;
             display: block;
             padding: 8px 10px;
+            border: none;
+            z-index: 2;
         }
         
         /* Styling for the link on hover */
-        a:hover {
+        .location-link:hover {
             background-color: #ddd;
+            cursor: pointer;
         }
     }
 }
